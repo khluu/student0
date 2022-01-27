@@ -176,11 +176,9 @@ int main (int argc, char *argv[]) {
   }
   
   if (count_mode) {
-    printf("COUNT MODE");
     total_words = num_words(infile);
     printf("The total number of words is: %i\n", total_words);
   } else {
-    printf("NOT COUNT MODE");
     count_words(&word_counts, infile);
     wordcount_sort(&word_counts, wordcount_less);
   
