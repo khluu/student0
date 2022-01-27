@@ -79,16 +79,20 @@ void count_words(WordCount **wclist, FILE *infile) {
   char character;
   char *word_str = (char *) malloc(MAX_WORD_LEN + 1);
   int len = 0;
-  while((character = fgetc(infile)) != EOF) {
+  do {
+    character = fgetc(infile);
     if (isalpha(character)) {
       character = tolower(character);
       word_str[len++] = character;
-    } else {
+    } else if (len >= 2) {
       word_str[len] = '\0';
       add_word(wclist, word_str);
       len = 0;
+      if (character == '\\') {
+        fgetc(infile);
+      }
     }
-  }
+  } while(character != EOF);
   /*
   while((character = fgetc(infile)) != EOF) {
     if (!isalpha(character)) {
