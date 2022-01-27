@@ -46,6 +46,7 @@ WordCount *word_counts = NULL;
  */
 
 int num_words(FILE* infile) {
+  rewind(infile);
   int num_words = 0;
   char character;
   int len = 0;
