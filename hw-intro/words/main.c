@@ -49,11 +49,12 @@ int num_words(FILE* infile) {
   char character;
   int len = 0;
   while((character = fgetc(infile)) != EOF) {
-    if (!isalpha(character)) {
+    if (isalpha(character) == 0) {
       if (len >= 2) {
         num_words++;
-        len = 0;
+      } else {
       }
+      len = 0;
     } else {
       if (len < MAX_WORD_LEN) {
         len++;
