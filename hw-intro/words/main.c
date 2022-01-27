@@ -88,9 +88,6 @@ void count_words(WordCount **wclist, FILE *infile) {
       word_str[len] = '\0';
       add_word(wclist, word_str);
       len = 0;
-      if (character == '\\') {
-        fgetc(infile);
-      }
     }
   } while(character != EOF);
   /*
