@@ -47,9 +47,18 @@ WordCount *word_counts = NULL;
 int num_words(FILE* infile) {
   int num_words = 0;
   char character;
+  int len = 0;
   while((character = fgetc(infile)) != EOF) {
     if (!isalpha(character)) {
       num_words++;
+      len = 0;
+    } else {
+      if (len < MAX_WORD_LEN) {
+        len++;
+      } else if (len == MAX_WORD_LEN) {
+        len = 1;
+        num_words++;
+      }
     }
   }
   return num_words;
