@@ -76,6 +76,7 @@ int num_words(FILE* infile) {
  * Useful functions: fgetc(), isalpha(), tolower(), add_word().
  */
 void count_words(WordCount **wclist, FILE *infile) {
+  rewind(infile);
   char character;
   char *word_str = (char *) malloc(MAX_WORD_LEN + 1);
   int len = 0;
