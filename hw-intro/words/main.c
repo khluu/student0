@@ -49,7 +49,8 @@ int num_words(FILE* infile) {
   int num_words = 0;
   char character;
   int len = 0;
-  while((character = fgetc(infile)) != EOF) {
+  do {
+    character = fgetc(infile);
     if (isalpha(character) == 0) {
       if (len >= 2) {
         num_words++;
@@ -69,7 +70,7 @@ int num_words(FILE* infile) {
       }
       }
     }
-  }
+  } while(character != EOF); 
   return num_words;
 }
 
