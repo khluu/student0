@@ -52,7 +52,7 @@ int num_words(FILE* infile) {
   do {
     character = fgetc(infile);
     if (isalpha(character) == 0) {
-      if (len >= 2) {
+      if (len >= 1) {
         num_words++;
       } else {
       }
