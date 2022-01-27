@@ -183,6 +183,8 @@ int main (int argc, char *argv[]) {
   if ((argc - optind) < 1) {
     // No input file specified, instead, read from STDIN instead.
     infile = stdin;
+    total_words = total_words + num_words(infile);
+    count_words(&word_counts, infile);
   } else {
     //infile = fopen(argv[optind],"r");
     for (int i = optind; i < argc; i++) {
