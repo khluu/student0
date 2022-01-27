@@ -182,22 +182,23 @@ int main (int argc, char *argv[]) {
     // No input file specified, instead, read from STDIN instead.
     infile = stdin;
   } else {
-    infile = fopen(argv[optind],"r");
-    //for (int i = optind; i < argc; i++) {
-    //  infile = fopen(argv[i], "r");
-    //  if (count_mode) {
-    //    total_words = total_words + num_words(infile);
-    //  } else {
-    //    count_words(&word_counts, infile);
-    //  }
-    //}
+    //infile = fopen(argv[optind],"r");
+    for (int i = optind; i < argc; i++) {
+      infile = fopen(argv[i], "r");
+      if (infile == NULL) {
+        printf("ERROR");
+      } else if (count_mode) {
+        total_words = total_words + num_words(infile);
+      } else {
+        count_words(&word_counts, infile);
+      }
+    }
     // At least one file specified. Useful functions: fopen(), fclose().
     // The first file can be found at argv[optind]. The last file can be
     // found at argv[argc-1].
   }
   
   if (count_mode) {
-    total_words = num_words(infile);
     printf("The total number of words is: %i\n", total_words);
   } else {
     //count_words(&word_counts, infile);
