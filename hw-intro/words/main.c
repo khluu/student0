@@ -57,11 +57,16 @@ int num_words(FILE* infile) {
       }
       len = 0;
     } else {
+      if (character == "\\") {
+        continue;
+      } else {
+      
       if (len < MAX_WORD_LEN) {
         len++;
       } else if (len == MAX_WORD_LEN) {
         len = 1;
         num_words++;
+      }
       }
     }
   }
