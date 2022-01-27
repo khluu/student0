@@ -83,11 +83,14 @@ void count_words(WordCount **wclist, FILE *infile) {
   int len = 0;
   do {
     character = fgetc(infile);
-    if (isalpha(character)) {
+    if (isalpha(character) != 0) {
       character = tolower(character);
       word_str[len++] = character;
     } else if (len >= 2) {
+      word_str[len] = '\0';
       add_word(wclist, word_str);
+      len = 0;
+    } else {
       len = 0;
     }
   } while(character != EOF);
