@@ -44,6 +44,7 @@ WordCount *word_counts = NULL;
  * Returns the total amount of words found in infile.
  * Useful functions: fgetc(), isalpha().
  */
+
 int num_words(FILE* infile) {
   int num_words = 0;
   char character;
@@ -67,7 +68,7 @@ int num_words(FILE* infile) {
   return num_words;
 }
 
-/*
+  /*
  * 3.1.2 Word Frequency Count
  *
  * Given infile, extracts and adds each word in the FILE to `wclist`.
@@ -181,21 +182,22 @@ int main (int argc, char *argv[]) {
     // No input file specified, instead, read from STDIN instead.
     infile = stdin;
   } else {
-    for (int i = optind; i < argc; i++) {
-      infile = fopen(argv[i], "r");
-      if (count_mode) {
-        total_words = total_words + num_words(infile);
-      } else {
-        count_words(&word_counts, infile);
-      }
-    }
+    infile = fopen(argv[optind],"r");
+    //for (int i = optind; i < argc; i++) {
+    //  infile = fopen(argv[i], "r");
+    //  if (count_mode) {
+    //    total_words = total_words + num_words(infile);
+    //  } else {
+    //    count_words(&word_counts, infile);
+    //  }
+    //}
     // At least one file specified. Useful functions: fopen(), fclose().
     // The first file can be found at argv[optind]. The last file can be
     // found at argv[argc-1].
   }
   
   if (count_mode) {
-    //total_words = num_words(infile);
+    total_words = num_words(infile);
     printf("The total number of words is: %i\n", total_words);
   } else {
     //count_words(&word_counts, infile);
