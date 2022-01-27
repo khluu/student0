@@ -52,25 +52,20 @@ int num_words(FILE* infile) {
   do {
     character = fgetc(infile);
     if (isalpha(character) == 0) {
-      if (len >= 1) {
+      if (len >= 2) {
         num_words++;
-      } else {
       }
       len = 0;
     } else {
-      if (character == "\\") {
-        continue;
-      } else {
-      
       if (len < MAX_WORD_LEN) {
         len++;
       } else if (len == MAX_WORD_LEN) {
         len = 1;
         num_words++;
       }
-      }
+      
     }
-  } while(character != EOF); 
+  }while(character != EOF); 
   return num_words;
 }
 
