@@ -46,7 +46,8 @@ word_count_t* find_word(word_count_list_t* wclist, char* word) {
   struct word_count *wc;
   for (e = list_begin(wclist); e != list_end(wclist); e = list_next(e)) {
     wc = list_entry(e, struct word_count, elem);
-    if (wc->word == word) {
+    if (strcmp(wc->word, word) == 0) {
+      //printf("equal");
       return wc;
     }
   }
@@ -55,17 +56,19 @@ word_count_t* find_word(word_count_list_t* wclist, char* word) {
 
 word_count_t* add_word(word_count_list_t* wclist, char* word) {
   /* TODO */
-  word_count_t* wc = find_word(wclist, word);
+  word_count_t *wc = find_word(wclist, word);
   if (wc != NULL) {
     wc->count++;
   } else {
     wc = malloc(sizeof(word_count_t));
-    if (wc == NULL) {
+    if (wc == NULL) { 
       return wc;
     }
     wc->word = word;
     wc->count = 1;
-    struct list_elem *e = list_back(wclist);
+    //printf("%d %s\n", wc->count, wc->word);
+    
+    struct list_elem *e = list_begin(wclist);
     list_insert(e, &wc->elem);
   }
   return wc;
@@ -84,7 +87,7 @@ void fprint_words(word_count_list_t* wclist, FILE* outfile) {
 
 static bool less_list(const struct list_elem* ewc1, const struct list_elem* ewc2, void* aux) {
   /* TODO */
-  bool (*func)(word_count, word_count) = aux;
+  bool (*func)(const word_count_t *, const word_count_t *) = aux;
   struct word_count *wc1;
   struct word_count *wc2;
   wc1 = list_entry(ewc1, struct word_count ,elem);
