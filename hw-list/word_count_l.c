@@ -43,10 +43,13 @@ size_t len_words(word_count_list_t* wclist) {
 
 word_count_t* find_word(word_count_list_t* wclist, char* word) {
   struct list_elem *e;
+  struct word_count *wc;
   for (e = list_begin(wclist); e != list_end(wclist); e = list_next(e)) {
-    
+    wc = list_entry(e, struct word_count, elem);
+    if (wc->word == word) {
+      return wc;
+    }
   }
-  return len;
   return NULL;
 }
 
