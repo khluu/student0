@@ -60,6 +60,9 @@ word_count_t* add_word(word_count_list_t* wclist, char* word) {
     wc->count++;
   } else {
     wc = malloc(sizeof(word_count_t));
+    if (wc == NULL) {
+      return wc;
+    }
     wc->word = word;
     wc->count = 1;
     struct list_elem *e = list_back(wclist);
