@@ -55,7 +55,17 @@ word_count_t* find_word(word_count_list_t* wclist, char* word) {
 
 word_count_t* add_word(word_count_list_t* wclist, char* word) {
   /* TODO */
-  return NULL;
+  word_count_t* wc = find_word(wclist, word);
+  if (wc != NULL) {
+    wc->count++;
+  } else {
+    wc.word = word;
+    wc->count = 1;
+    struct list_elem *e = list_back(wclist);
+    list_insert(e, wc->next);
+  }
+  return wc;
+  
 }
 
 void fprint_words(word_count_list_t* wclist, FILE* outfile) { /* TODO */
