@@ -61,7 +61,8 @@ word_count_t* add_word(word_count_list_t* wclist, char* word) {
   } else {
     wc->word = word;
     wc->count = 1;
-    struct list_elem *e = list_back(wclist);
+    struct list_elem *e = list_front(wclist);
+    e = list_next(e);
     list_insert(e, &wc->elem);
   }
   return wc;
