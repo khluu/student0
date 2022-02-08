@@ -31,7 +31,12 @@ void init_words(word_count_list_t* wclist) { /* TODO */
 
 size_t len_words(word_count_list_t* wclist) {
   /* TODO */
-  return 0;
+  int len = 0;
+  struct list_elem *e;
+  for (e = list_begin(wclist); e != list_end(wclist); e = list_next(e)) {
+    len++;
+  }
+  return len;
 }
 
 word_count_t* find_word(word_count_list_t* wclist, char* word) {
