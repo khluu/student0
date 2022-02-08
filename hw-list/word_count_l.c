@@ -69,7 +69,14 @@ word_count_t* add_word(word_count_list_t* wclist, char* word) {
 
 }
 
-void fprint_words(word_count_list_t* wclist, FILE* outfile) { /* TODO */
+void fprint_words(word_count_list_t* wclist, FILE* outfile) { 
+  struct list_elem *e;
+  struct word_count *wc;
+  for (e = list_begin(wclist); e != list_end(wclist); e = list_next(e)) {
+    wc = list_entry(e, struct word_count, elem);
+    fprintf(outfile, "%d %s\n", wc->count, wc->word);
+  }
+  /* TODO */
 }
 
 static bool less_list(const struct list_elem* ewc1, const struct list_elem* ewc2, void* aux) {
