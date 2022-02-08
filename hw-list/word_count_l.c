@@ -31,7 +31,7 @@ void init_words(word_count_list_t* wclist) {
   /* TODO */
 }
 
-size_t len_words(word_count_list_t* wclist) {gi
+size_t len_words(word_count_list_t* wclist) {
   /* TODO */
   size_t len = 0;
   struct list_elem *e;
