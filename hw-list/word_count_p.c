@@ -39,7 +39,7 @@ size_t len_words(word_count_list_t* wclist) {
   /* TODO */
   size_t len = 0;
   struct list_elem *e;
-  for (e = list_begin(wclist->lst); e != list_end(wclist->lst); e = list_next(e)) {
+  for (e = list_begin(&wclist->lst); e != list_end(&wclist->lst); e = list_next(e)) {
     len++;
   }
   return len;
