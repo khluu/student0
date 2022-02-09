@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
     /* Process stdin in a single thread. */
     count_words(&word_counts, stdin);
   } else {
+    
     /* TODO */
   }
 
