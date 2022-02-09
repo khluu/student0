@@ -27,11 +27,11 @@
 #ifndef PTHREADS
 #error "PTHREADS must be #define'd when compiling word_count_lp.c"
 #endif
-2
+
 #include "word_count.h"
 
 void init_words(word_count_list_t* wclist) { 
-  list_init(wclist->lst);
+  list_init(&wclist->lst);
   /* TODO */
 }
 
