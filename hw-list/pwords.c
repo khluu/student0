@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
       thread_params[t]->name = argv[t + 1];
       //printf("file name: %s", argv[t+1]);
       thread_params[t]->wc = &word_counts;
-      rc = pthread_create(&threads[t], NULL, readFile, (void*) thread_params[t]);
+      rc = pthread_create(&threads[t], NULL, &readFile, (void*) thread_params[t]);
       if (rc) {
         printf("ERROR; return code from pthread_create() is %d\n", rc);
         exit(-1);
