@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   /* Create the empty data structure. */
   word_count_list_t word_counts;
   init_words(&word_counts);
-
+  pthread_mutex_init(&word_counts.lock, NULL);
   if (argc <= 1) {
     /* Process stdin in a single thread. */
     count_words(&word_counts, stdin);
