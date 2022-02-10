@@ -25,13 +25,13 @@ int main(int argc, char* argv[]) {
   int rc;
   long t;
   int nthreads = NUM_THREADS;
-  printf("%d", nthreads);
+  //printf("%d", nthreads);
   char* targs = strcpy(malloc(100), "I am on the heap.");
 
   if (argc > 1) {
     nthreads = atoi(argv[1]);
   }
-  printf("%d", nthreads);
+  //printf("%d", nthreads);
   pthread_t threads[nthreads];
 
   printf("Main stack: %lx, common: %lx (%d)\n", (unsigned long)&t, (unsigned long)&common, common);

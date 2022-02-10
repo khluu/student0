@@ -63,8 +63,8 @@ int main(int argc, char* argv[]) {
     //printf("%s\n", argv[0]);
     //printf("%d\n", atoi(argv[2]));
     //printf("%d\n", nthreads);
-    struct thread_param *thread_params[nthreads];
-    pthread_t threads[nthreads];
+    struct thread_param *thread_params[argc + 1];
+    pthread_t threads[argc + 1];
 
     //printf("num threads: %d", nthreads);
 
