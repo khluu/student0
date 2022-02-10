@@ -32,6 +32,17 @@
 #include "word_count.h"
 #include "word_helpers.h"
 
+struct thread_param {
+  char *name;
+  word_count_list_t *wc;
+};
+
+void* readFile(void *args) {
+  struct thread_param *thread_params = args;
+  FILE *fp = fopen(thread_params->name, "r");
+  count_words(thread_params->wc, fp);
+}
+
 /*
  * main - handle command line, spawning one thread per file.
  */
@@ -44,7 +55,27 @@ int main(int argc, char* argv[]) {
     /* Process stdin in a single thread. */
     count_words(&word_counts, stdin);
   } else {
-    
+    int rc;
+    int nthreads = argc - 1;
+    struct thread_param *thread_params[nthreads];
+    pthread_t threads[nthreads];
+
+    printf("num threads: %d", nthreads);
+
+    for (int t = 0; t < nthreads; t++) {
+      thread_params[t] = malloc(sizeof(struct thread_param));
+      thread_params[t]->name = argv[t + 1];
+      printf("file name: %s", argv[t+1]);
+      thread_params[t]->wc = &word_counts;
+      rc = pthread_create(&threads[t], NULL, readFile, (void*) thread_params[t]);
+      if (rc) {
+        printf("ERROR; return code from pthread_create() is %d\n", rc);
+        exit(-1);
+      }
+    }
+    for (int t = 0; t < nthreads; t++) {
+      pthread_join(threads[t], NULL);
+    }
     /* TODO */
   }
 
