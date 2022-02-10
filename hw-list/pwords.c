@@ -42,8 +42,8 @@ void* readFile(void *args) {
   FILE *fp = fopen(thread_params->name, "r");
   //printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
-  pthread_exit(NULL);
-  return 0;
+  //pthread_exit(NULL);
+  //return 0;
 }
 
 /*
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   /* Create the empty data structure. */
   word_count_list_t word_counts;
   init_words(&word_counts);
-  pthread_mutex_init(&word_counts.lock, NULL);
+  pthread_mutex_init(&(word_counts.lock), NULL);
   if (argc <= 1) {
     /* Process stdin in a single thread. */
     count_words(&word_counts, stdin);
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
     //printf("%s\n", argv[0]);
     //printf("%d\n", atoi(argv[2]));
     //printf("%d\n", nthreads);
-    struct thread_param *thread_params[argc + 1];
+    struct thread_param* thread_params[argc + 1];
     pthread_t threads[argc + 1];
 
     //printf("num threads: %d", nthreads);
@@ -86,17 +86,18 @@ int main(int argc, char* argv[]) {
       pthread_join(threads[t], NULL);
     }
     
-    //for(int t = 1; t < argc; t++) {
-      //printf("thread %d\n", t);
-      //printf("file: %s\n", thread_params[t]->name);
-    //}
-    
+    /*
+    for(int t = 1; t < argc; t++) {
+      printf("thread %d\n", t);
+      printf("file: %s\n", thread_params[t]->name);
+    }
+    */
     /* TODO */
   }
 
   /* Output final result of all threads' work. */
   wordcount_sort(&word_counts, less_count);
   fprint_words(&word_counts, stdout);
-  pthread_exit(NULL);
+  //pthread_exit(NULL);
   return 0;
 }

@@ -32,19 +32,19 @@
 
 void init_words(word_count_list_t* wclist) { 
   list_init(&wclist->lst);
-  pthread_mutex_init(&wclist->lock, NULL);
+  //pthread_mutex_init(&wclist->lock, NULL);
   /* TODO */
 }
 
 size_t len_words(word_count_list_t* wclist) {
   /* TODO */
-  pthread_mutex_lock(&wclist->lock);
+  //pthread_mutex_lock(&wclist->lock);
   size_t len = 0;
   struct list_elem *e;
   for (e = list_begin(&wclist->lst); e != list_end(&wclist->lst); e = list_next(e)) {
     len++;
   }
-  pthread_mutex_unlock(&wclist->lock);
+  //pthread_mutex_unlock(&wclist->lock);
   return len;
 }
 
@@ -95,8 +95,18 @@ void fprint_words(word_count_list_t* wclist, FILE* outfile) {
   }
   /* TODO */
 }
+static bool less_list(const struct list_elem* ewc1, const struct list_elem* ewc2, void* aux) {
+  /* TODO */
+  bool (*func)(const word_count_t *, const word_count_t *) = aux;
+  struct word_count *wc1;
+  struct word_count *wc2;
+  wc1 = list_entry(ewc1, struct word_count ,elem);
+  wc2 = list_entry(ewc2, struct word_count ,elem);
+  return func(wc1, wc2);
+}
 
 void wordcount_sort(word_count_list_t* wclist,
                     bool less(const word_count_t*, const word_count_t*)) {
   /* TODO */
+  list_sort(&wclist->lst, less_list, less);
 }
