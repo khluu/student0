@@ -38,16 +38,19 @@ void init_words(word_count_list_t* wclist) {
 
 size_t len_words(word_count_list_t* wclist) {
   /* TODO */
+  pthread_mutex_lock(&wclist->lock);
   size_t len = 0;
   struct list_elem *e;
   for (e = list_begin(&wclist->lst); e != list_end(&wclist->lst); e = list_next(e)) {
     len++;
   }
+  pthread_mutex_unlock(&wclist->lock);
   return len;
 }
 
 word_count_t* find_word(word_count_list_t* wclist, char* word) {
   /* TODO */
+  //pthread_mutex_lock(&wclist->lock);
   struct list_elem *e;
   struct word_count *wc;
   for (e = list_begin(&wclist->lst); e != list_end(&wclist->lst); e = list_next(e)) {
@@ -57,6 +60,7 @@ word_count_t* find_word(word_count_list_t* wclist, char* word) {
       return wc;
     }
   }
+  //pthread_mutex_unlock(&wclist->lock);
   return NULL;
 }
 

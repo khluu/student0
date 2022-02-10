@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
       //}
     }
     for (t = 1; t < argc; t++) {
+      //printf("joining\n");
       pthread_join(threads[t], NULL);
     }
     
