@@ -42,6 +42,7 @@ void* readFile(void *args) {
   FILE *fp = fopen(thread_params->name, "r");
   //printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
+  pthread_exit(NULL);
   return 0;
 }
 
@@ -67,20 +68,20 @@ int main(int argc, char* argv[]) {
     pthread_t threads[argc + 1];
 
     //printf("num threads: %d", nthreads);
-
-    for (int t = 1; t < argc; t++) {
+    long t;
+    for (t = 1; t < argc; t++) {
       thread_params[t] = malloc(sizeof(struct thread_param));
       thread_params[t]->name = argv[t];
       //printf("file name: %s", argv[t+1]);
       thread_params[t]->wc = &word_counts;
       //printf("thread %d\n", t);
-      rc = pthread_create(&threads[t], NULL, readFile, (void*) thread_params[t]);
+      rc = pthread_create(&threads[t], NULL, &readFile, (void*) thread_params[t]);
       //if (rc) {
       //  printf("ERROR; return code from pthread_create() is %d\n", rc);
       //  exit(-1);
       //}
     }
-    for (int t = 1; t < argc; t++) {
+    for (t = 1; t < argc; t++) {
       pthread_join(threads[t], NULL);
     }
     
