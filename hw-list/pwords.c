@@ -42,6 +42,7 @@ void* readFile(void *args) {
   FILE *fp = fopen(thread_params->name, "r");
   //printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
+  return 0;
 }
 
 /*
