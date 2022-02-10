@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
       //printf("file name: %s", argv[t+1]);
       thread_params[t]->wc = &word_counts;
       //printf("thread %d\n", t);
-      rc = pthread_create(&threads[t], NULL, readFile, (void*) thread_params[t]);
+      pthread_create(&threads[t], NULL, readFile, (void*) thread_params[t]);
       //if (rc) {
       //  printf("ERROR; return code from pthread_create() is %d\n", rc);
       //  exit(-1);
@@ -85,10 +85,10 @@ int main(int argc, char* argv[]) {
       pthread_join(threads[t], NULL);
     }
     
-    for(int t = 1; t < argc; t++) {
+    //for(int t = 1; t < argc; t++) {
       //printf("thread %d\n", t);
       //printf("file: %s\n", thread_params[t]->name);
-    }
+    //}
     
     /* TODO */
   }
