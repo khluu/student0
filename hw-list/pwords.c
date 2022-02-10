@@ -42,7 +42,7 @@ void* readFile(void *args) {
   FILE *fp = fopen(thread_params->name, "r");
   //printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
-  
+  return 0;
 }
 
 /*
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
       //printf("file name: %s", argv[t+1]);
       thread_params[t]->wc = &word_counts;
       //printf("thread %d\n", t);
-      rc = pthread_create(&threads[t], NULL, &readFile, (void*) thread_params[t]);
+      rc = pthread_create(&threads[t], NULL, readFile, (void*) thread_params[t]);
       //if (rc) {
       //  printf("ERROR; return code from pthread_create() is %d\n", rc);
       //  exit(-1);
@@ -91,5 +91,6 @@ int main(int argc, char* argv[]) {
   /* Output final result of all threads' work. */
   wordcount_sort(&word_counts, less_count);
   fprint_words(&word_counts, stdout);
+  pthread_exit(NULL);
   return 0;
 }
