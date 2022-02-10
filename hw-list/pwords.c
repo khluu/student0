@@ -40,7 +40,9 @@ struct thread_param {
 void* readFile(void *args) {
   struct thread_param *thread_params = args;
   FILE *fp = fopen(thread_params->name, "r");
+  printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
+  
 }
 
 /*
@@ -67,15 +69,22 @@ int main(int argc, char* argv[]) {
       thread_params[t]->name = argv[t + 1];
       //printf("file name: %s", argv[t+1]);
       thread_params[t]->wc = &word_counts;
+      //printf("thread %d\n", t);
       rc = pthread_create(&threads[t], NULL, &readFile, (void*) thread_params[t]);
-      if (rc) {
-        printf("ERROR; return code from pthread_create() is %d\n", rc);
-        exit(-1);
-      }
+      //if (rc) {
+      //  printf("ERROR; return code from pthread_create() is %d\n", rc);
+      //  exit(-1);
+      //}
     }
     for (int t = 0; t < nthreads; t++) {
       pthread_join(threads[t], NULL);
     }
+    """
+    for(int t = 0; t < nthreads; t++) {
+      printf("thread %d\n", t);
+      printf("file: %s\n", thread_params[t]->name);
+    }
+    """
     /* TODO */
   }
 
