@@ -38,7 +38,7 @@ struct thread_param {
 };
 
 void* readFile(void *args) {
-  struct thread_param *thread_params = args;
+  struct thread_param *thread_params = (struct thread_param*) args;
   FILE *fp = fopen(thread_params->name, "r");
   //printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
