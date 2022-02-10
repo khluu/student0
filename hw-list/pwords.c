@@ -79,12 +79,12 @@ int main(int argc, char* argv[]) {
     for (int t = 0; t < nthreads; t++) {
       pthread_join(threads[t], NULL);
     }
-    """
+    /*
     for(int t = 0; t < nthreads; t++) {
       printf("thread %d\n", t);
       printf("file: %s\n", thread_params[t]->name);
     }
-    """
+    */
     /* TODO */
   }
 
