@@ -32,6 +32,7 @@
 
 void init_words(word_count_list_t* wclist) { 
   list_init(&wclist->lst);
+  pthread_mutex_init(&wclist->lock, NULL);
   /* TODO */
 }
 
