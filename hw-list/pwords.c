@@ -42,7 +42,6 @@ void* readFile(void *args) {
   FILE *fp = fopen(thread_params->name, "r");
   //printf("file: %s\n", thread_params->name);
   count_words(thread_params->wc, fp);
-  return 0;
 }
 
 /*
@@ -59,14 +58,18 @@ int main(int argc, char* argv[]) {
   } else {
     int rc;
     int nthreads = argc - 1;
+    //printf("%d\n", nthreads);
+    //printf("%s\n", argv[0]);
+    //printf("%d\n", atoi(argv[2]));
+    //printf("%d\n", nthreads);
     struct thread_param *thread_params[nthreads];
     pthread_t threads[nthreads];
 
     //printf("num threads: %d", nthreads);
 
-    for (int t = 0; t < nthreads; t++) {
+    for (int t = 1; t < argc; t++) {
       thread_params[t] = malloc(sizeof(struct thread_param));
-      thread_params[t]->name = argv[t + 1];
+      thread_params[t]->name = argv[t];
       //printf("file name: %s", argv[t+1]);
       thread_params[t]->wc = &word_counts;
       //printf("thread %d\n", t);
@@ -76,15 +79,15 @@ int main(int argc, char* argv[]) {
       //  exit(-1);
       //}
     }
-    for (int t = 0; t < nthreads; t++) {
+    for (int t = 1; t < argc; t++) {
       pthread_join(threads[t], NULL);
     }
-    /*
-    for(int t = 0; t < nthreads; t++) {
-      printf("thread %d\n", t);
-      printf("file: %s\n", thread_params[t]->name);
+    
+    for(int t = 1; t < argc; t++) {
+      //printf("thread %d\n", t);
+      //printf("file: %s\n", thread_params[t]->name);
     }
-    */
+    
     /* TODO */
   }
 
