@@ -24,7 +24,7 @@ struct http_request* http_request_parse(int fd) {
 
   int bytes_read = read(fd, read_buffer, LIBHTTP_REQUEST_MAX_SIZE);
   read_buffer[bytes_read] = '\0'; /* Always null-terminate. */
-
+  
   char *read_start, *read_end;
   size_t read_size;
 

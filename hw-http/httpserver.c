@@ -36,15 +36,37 @@ int server_proxy_port;
  * It is the caller's reponsibility to ensure that the file stored at `path` exists.
  */
 void serve_file(int fd, char* path) {
-
+  //printf("serving file\n");
   /* TODO: PART 2 */
   /* PART 2 BEGIN */
-
+  int rfd = open(path, O_RDONLY);
+  //find file size
+  char* read_size =  (char *) malloc(7810 * sizeof(char));
+  int start_pos = lseek(rfd, 0, SEEK_CUR);
+  int sz = lseek(rfd, 0, SEEK_END);
+  lseek(rfd, start_pos, SEEK_SET); //set seek back to beginning of file
+  //printf("serve here\n");
+  
+  snprintf(read_size, 100, "%d", sz);
   http_start_response(fd, 200);
   http_send_header(fd, "Content-Type", http_get_mime_type(path));
-  http_send_header(fd, "Content-Length", "0"); // TODO: change this line too
+  http_send_header(fd, "Content-Length", read_size); // TODO: change this line too
   http_end_headers(fd);
-
+  //printf("start reading\n");
+  /* printing content on http */
+  char buff[4096];
+  int bytes_in;
+  while((bytes_in = read(rfd, buff, 4096)) != 0) {
+    //printf("reading\n");
+    int bytes_out;
+    while (bytes_in > 0) {
+      bytes_out = write(fd, buff, bytes_in);
+      //if (bytes_out < 0) return bytes_out;
+      bytes_in -= bytes_out;
+    }
+  }
+  //printf("done reading %d\n", bytes_in);
+  close(rfd);
   /* PART 2 END */
 }
 
@@ -81,10 +103,12 @@ void serve_directory(int fd, char* path) {
  *   Closes the client socket (fd) when finished.
  */
 void handle_files_request(int fd) {
-
+  //printf("handle file req\n");  
   struct http_request* request = http_request_parse(fd);
-
+  //printf("parse done\n");
+  //printf("%s\n", request->method);
   if (request == NULL || request->path[0] != '/') {
+    //printf("this\n");
     http_start_response(fd, 400);
     http_send_header(fd, "Content-Type", "text/html");
     http_end_headers(fd);
@@ -93,6 +117,7 @@ void handle_files_request(int fd) {
   }
 
   if (strstr(request->path, "..") != NULL) {
+    //printf("this2\n");
     http_start_response(fd, 403);
     http_send_header(fd, "Content-Type", "text/html");
     http_end_headers(fd);
@@ -117,7 +142,16 @@ void handle_files_request(int fd) {
    */
 
   /* PART 2 & 3 BEGIN */
-
+  struct stat file_in;
+  int check = stat(path, &file_in);
+  //printf("handling");
+  if (check == 0) {
+    serve_file(fd, path);
+  } else {
+    http_start_response(fd, 404);
+    http_send_header(fd, "Content-Type", "text/html");
+    http_end_headers(fd);
+  }
   /* PART 2 & 3 END */
 
   close(fd);
@@ -263,7 +297,13 @@ void serve_forever(int* socket_number, void (*request_handler)(int)) {
    */
 
   /* PART 1 BEGIN */
+  //printf("%d\n", server_address.sin_addr);
+  //printf("%d\n", server_address.sin_port);
+  //printf("%d %d\n", server_port, htons(server_port));
+  bind(*socket_number, (struct sockaddr*) &server_address,
+                                  sizeof(server_address));
 
+  listen(*socket_number, 1024);
   /* PART 1 END */
   printf("Listening on port %d...\n", server_port);
 
