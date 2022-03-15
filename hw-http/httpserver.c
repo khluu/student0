@@ -87,6 +87,17 @@ void serve_directory(int fd, char* path) {
       http_format_index(path_with_dir, path);
       // write on http
       int rfd = open(path_with_dir, O_RDONLY);
+      char* read_size =  (char *) malloc(7810 * sizeof(char));
+      int start_pos = lseek(rfd, 0, SEEK_CUR);
+      int sz = lseek(rfd, 0, SEEK_END);
+      lseek(rfd, start_pos, SEEK_SET); //set seek back to beginning of file
+      //printf("serve here\n");
+      
+      snprintf(read_size, 100, "%d", sz);
+      http_start_response(fd, 200);
+      http_send_header(fd, "Content-Type", http_get_mime_type(path));
+      http_send_header(fd, "Content-Length", read_size); // TODO: change this line too
+      http_end_headers(fd);
       char buff[4096];
       int bytes_in;
       while((bytes_in = read(rfd, buff, 4096)) != 0) {
