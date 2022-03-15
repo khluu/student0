@@ -58,9 +58,8 @@ void serve_file(int fd, char* path) {
   int bytes_in;
   while((bytes_in = read(rfd, buff, 4096)) != 0) {
     //printf("reading\n");
-    int bytes_out;
     while (bytes_in > 0) {
-      bytes_out = write(fd, buff, bytes_in);
+      int bytes_out = write(fd, buff, bytes_in);
       //if (bytes_out < 0) return bytes_out;
       bytes_in -= bytes_out;
     }
@@ -79,7 +78,29 @@ void serve_directory(int fd, char* path) {
   /* PART 3 BEGIN */
 
   // TODO: Open the directory (Hint: opendir() may be useful here)
-
+  DIR* open_dir = opendir(path);
+  struct dirent* directory;
+  while((directory = readdir(open_dir)) != NULL) {
+    if (strcmp("index.html", directory->d_name) == 0) {
+      int length = strlen(path) + strlen("/index.html") + 1;
+      char *path_with_dir = malloc(sizeof(char) * length);
+      http_format_index(path_with_dir, path);
+      // write on http
+      int rfd = open(path_with_dir, O_RDONLY);
+      char buff[4096];
+      int bytes_in;
+      while((bytes_in = read(rfd, buff, 4096)) != 0) {
+        //printf("reading\n");
+        while (bytes_in > 0) {
+          int bytes_out = write(fd, buff, bytes_in);
+          //if (bytes_out < 0) return bytes_out;
+          bytes_in -= bytes_out;
+        }
+      }
+      //printf("done reading %d\n", bytes_in);
+      close(rfd);
+    }
+  }
   /**
    * TODO: For each entry in the directory (Hint: look at the usage of readdir() ),
    * send a string containing a properly formatted HTML. (Hint: the http_format_href()
@@ -146,7 +167,12 @@ void handle_files_request(int fd) {
   int check = stat(path, &file_in);
   //printf("handling");
   if (check == 0) {
-    serve_file(fd, path);
+    if (S_ISREG(file_in.st_mode)) {
+      serve_file(fd, path);
+    } else {
+      serve_directory(fd, path);
+    }
+
   } else {
     http_start_response(fd, 404);
     http_send_header(fd, "Content-Type", "text/html");
