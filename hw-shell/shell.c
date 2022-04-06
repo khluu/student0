@@ -110,7 +110,9 @@ void init_shell() {
     tcgetattr(shell_terminal, &shell_tmodes);
   }
 }
-
+char* path_resol(char* path, char* arg) {
+  
+}
 int main(unused int argc, unused char* argv[]) {
   init_shell();
 
