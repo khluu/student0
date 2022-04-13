@@ -6,6 +6,10 @@
 #include "threads/thread.h"
 #include "threads/vaddr.h"
 #include "userprog/syscall.h"
+#include "threads/palloc.h"
+#include "threads/synch.h"
+#include "userprog/pagedir.h"
+
 
 /* Number of page faults processed. */
 static long long page_fault_cnt;
@@ -156,14 +160,32 @@ static void page_fault(struct intr_frame* f) {
    * assume this; depending on the nature of the fault, the stack may need to
    * be grown.
    */
-  if (user)
-    syscall_exit(-1);
+  if (user) {
+      if (fault_addr >= f->esp - 32) {
+         // 
+         void* fault_spot = pg_round_down(fault_addr);
+         int cnt_page = ((void *)t->stack_page - fault_spot) / PGSIZE;
+         void* kpage = palloc_get_multiple(PAL_USER | PAL_ZERO, cnt_page);
+         if (!kpage) syscall_exit(-1);
+         for (int i = 0; i < cnt_page; i++) {
+            int step = PGSIZE * i;
+            pagedir_set_page(t->pagedir, fault_spot + step, kpage + step, true);
+         }
+      } else {
+         syscall_exit(-1);
+      }
+  } else {
+      printf("Page fault at %p: %s error %s page in %s context.\n", fault_addr,
+         not_present ? "not present" : "rights violation", write ? "writing" : "reading",
+         user ? "user" : "kernel");
+      kill(f);
+  }
 
   /* To implement virtual memory, delete the rest of the function
      body, and replace it with code that brings in the page to
      which fault_addr refers. */
-  printf("Page fault at %p: %s error %s page in %s context.\n", fault_addr,
+  /*printf("Page fault at %p: %s error %s page in %s context.\n", fault_addr,
          not_present ? "not present" : "rights violation", write ? "writing" : "reading",
          user ? "user" : "kernel");
-  kill(f);
+  kill(f);*/
 }

@@ -269,6 +269,8 @@ bool load(const char* file_name, void (**eip)(void), void** esp) {
           }
           if (!load_segment(file, file_page, (void*)mem_page, read_bytes, zero_bytes, writable))
             goto done;
+            int k = zero_bytes + read_bytes + mem_page;
+            t->heap_bottom = t->heap_top = ROUND_UP(k, PGSIZE);
         } else
           goto done;
         break;

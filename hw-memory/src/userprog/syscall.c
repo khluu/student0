@@ -7,6 +7,7 @@
 #include "threads/vaddr.h"
 #include "filesys/filesys.h"
 #include "filesys/file.h"
+#include "threads/palloc.h"
 
 static void syscall_handler(struct intr_frame*);
 
@@ -36,7 +37,22 @@ static void validate_string_in_user_region(const char* string) {
   if (!is_user_vaddr(string) || strnlen(string, delta) == delta)
     syscall_exit(-1);
 }
-
+static void* syscall_sbrk(intptr_t increment) {
+  struct thread* t = thread_current();
+  void* og_heap_top = t->heap_top;
+  // if increment > 0
+  int cnt_page = (pg_round_up(t->heap_top + increment) - pg_round_up(t->heap_top)) / PGSIZE;
+  void* kpage = palloc_get_multiple(PAL_USER | PAL_ZERO, cnt_page);
+  //void *kpage = palloc_get_page(PAL_USER | PAL_ZERO);
+  if (!kpage) return -1;
+  void* brk_up = pg_round_up(t->heap_top);
+  t->heap_top += increment;
+  for (int i = 0; i < cnt_page; i++) {
+    bool res = pagedir_set_page(t->pagedir, brk_up + PGSIZE * i, kpage + PGSIZE * i, true);
+    if (res == false) return -1;
+  }
+  return og_heap_top;
+}
 static int syscall_open(const char* filename) {
   struct thread* t = thread_current();
   if (t->open_file != NULL)
@@ -109,6 +125,11 @@ static void syscall_handler(struct intr_frame* f) {
     case SYS_CLOSE:
       validate_buffer_in_user_region(&args[1], sizeof(uint32_t));
       syscall_close((int)args[1]);
+      break;
+      
+    case SYS_SBRK:
+      validate_buffer_in_user_region(&args[1], sizeof(uint32_t));
+      f->eax = (uint32_t)syscall_sbrk((intptr_t)args[1]);
       break;
 
     default:

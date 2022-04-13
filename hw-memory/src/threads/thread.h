@@ -103,6 +103,10 @@ struct thread {
 
   /* Owned by thread.c. */
   unsigned magic; /* Detects stack overflow. */
+
+  int* stack_page; //stack page pointer 
+  void* heap_top; // top of the heap aka break.
+  void* heap_bottom; // start/bottom of heap
 };
 
 /* If false (default), use round-robin scheduler.
